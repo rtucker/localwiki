@@ -23,6 +23,7 @@ from pages.plugins import html_to_template_text
 from pages.plugins import tag_imports
 from pages.xsstests import xss_exploits
 from pages import exceptions
+from tags.models import PageTagSet, Tag
 
 
 class PageTest(TestCase):
@@ -113,7 +114,8 @@ class PageTest(TestCase):
         a_post['content'] = '<p>a content</p>'
         a = PageForm(a_post, instance=p)
         self.failIf(a.is_valid())
-        self.failUnless(PageForm.conflict_error in str(a.errors))
+        # + '' to force evaluation of lazy string
+        self.failUnless(str(PageForm.conflict_error + '') in str(a.errors))
 
         a_post = a.data
         a = PageForm(a_post, instance=p)
@@ -174,11 +176,18 @@ class PageTest(TestCase):
         points = GEOSGeometry("""MULTIPOINT (-122.4378964233400069 37.7971758820830033, -122.3929211425700032 37.7688207875790027, -122.3908612060599950 37.7883584775320003, -122.4056240844700056 37.8013807351830025, -122.4148937988299934 37.8002956347170027, -122.4183270263600036 37.8051784612779969)""")
         map = MapData(points=points, page=p)
         map.save()
+        # Add tags to page
+        tagset = PageTagSet(page=p)
+        tagset.save()
+        tag = Tag(name="tag1")
+        tag.save()
+        tagset.tags.add(tag)
 
         p.rename_to("New Page With FKs")
 
         new_p = Page.objects.get(name="New Page With FKs")
         self.assertEqual(len(MapData.objects.filter(page=new_p)), 1)
+        self.assertEqual(len(new_p.pagetagset.tags.all()), 1)
         # Two redirects: one we created explicitly and one that was
         # created during rename_to()
         self.assertEqual(len(Redirect.objects.filter(destination=new_p)), 2)
@@ -400,7 +409,8 @@ class MergeModelFormTest(TestCase):
         a_post['contents'] = 'a contents'
         a = TestForm(a_post, instance=m_new)
         self.failIf(a.is_valid())
-        self.failUnless(MergeMixin.conflict_error in str(a.errors))
+        # + '' to force evaluation of lazy string
+        self.failUnless(str(MergeMixin.conflict_error + '') in str(a.errors))
 
         #repeated save with the same form rendered again should work, though
         a_post = a.data
@@ -509,7 +519,13 @@ class HTMLToTemplateTextTest(TestCase):
         imports = ''.join(tag_imports)
         template_text = html_to_template_text(html)
         self.assertEqual(template_text, imports +
-                                        'a\xc2\xa0<strong>\xc2\xa0</strong>\n')
+                                        u'a\xa0<strong>\xa0</strong>\n')
+
+    def test_empty_a_element(self):
+        html = '<p><a name="blah"></a></p>'
+        imports = ''.join(tag_imports)
+        template_text = html_to_template_text(html)
+        self.assertEqual(template_text, imports + '<p><a name="blah"></a></p>')
 
 
 class PluginTest(TestCase):

@@ -52,6 +52,7 @@ from copy import copy
 from django.template import Node
 from django.core.urlresolvers import reverse
 from django.utils.text import unescape_entities
+from django.utils.translation import  ugettext as _
 from django.conf import settings
 
 from ckeditor.models import parse_style, sanitize_html_fragment
@@ -99,6 +100,14 @@ def escape_quotes(s):
     return s.replace('"', '\\"')
 
 
+def unquote_url(url):
+    return unquote_plus(url.encode('utf-8'))
+
+
+def prefixed_url_to_name(url, prefix):
+    return unquote_url(url.replace(prefix, ''))
+
+
 def insert_text_before(text, elem):
     prev = elem.getprevious()
     if prev is not None:
@@ -107,10 +116,8 @@ def insert_text_before(text, elem):
         elem.getparent().text = (elem.getparent().text or '') + text
 
 
-def include_page(elem, context=None):
-    if not 'href' in elem.attrib:
-        return
-    href = desanitize(elem.attrib['href'])
+def include_content(elem, plugin_tag, context=None):
+    href = elem.attrib['href']
     args = []
     if 'class' in elem.attrib:
         classes = elem.attrib['class'].split()
@@ -124,10 +131,27 @@ def include_page(elem, context=None):
     style = parse_style(elem.attrib.get('style', ''))
     if 'width' in style:
         container.attrib['style'] = 'width: ' + style['width'] + ';'
-    tag_text = '{%% include_page %s %%}' % ' '.join(args)
+    tag_text = '{%% %s %s %%}' % (plugin_tag, ' '.join(args))
     container.text = tag_text
     elem.addprevious(container)
     elem.getparent().remove(elem)
+
+
+def include_tag(elem, context=None):
+    if not 'href' in elem.attrib:
+        return
+    href = unquote_url(desanitize(elem.attrib['href']))
+    elem.attrib['href'] = prefixed_url_to_name(href, 'tags/')
+    return include_content(elem, 'include_tag', context)
+
+
+def include_page(elem, context=None):
+    if not 'href' in elem.attrib:
+        return
+    elem.attrib['href'] = unquote_url(desanitize(elem.attrib['href']))
+    if elem.attrib['href'].startswith('tags/'):
+        return include_tag(elem, context)
+    return include_content(elem, 'include_page', context)
 
 
 def embed_code(elem, context=None):
@@ -166,7 +190,7 @@ _files_url = '_files/'
 
 
 def file_url_to_name(url):
-    return unquote_plus(url.replace(_files_url, '').encode('utf-8'))
+    return prefixed_url_to_name(url, _files_url)
 
 
 def handle_image(elem, context=None):
@@ -197,7 +221,10 @@ def handle_image(elem, context=None):
         before = '{%% thumbnail "%s" "%dx%d" as im %%}' % (escaped_filename,
                                                            width, height)
         after = '{% endthumbnail %}'
-        elem.attrib['src'] = '{{ im.url }}'
+        # HTML will want to encode {{ }} inside a src, and we don't want that,
+        # so we will just rename it to src_thumb until just before it's output
+        del elem.attrib['src']
+        elem.attrib['src_thumb'] = '{{ im.url }}'
         insert_text_before(before, elem)
         elem.tail = after + (elem.tail or '')
     else:
@@ -214,6 +241,7 @@ def handle_image(elem, context=None):
 
 tag_imports = ['{% load pages_tags %}',
                '{% load thumbnail %}',
+               '{% load tags_tags %}',
               ]
 
 
@@ -223,6 +251,7 @@ tag_handlers = {"a": [handle_link],
 
 
 plugin_handlers = {"includepage": include_page,
+                   "includetag": include_tag,
                    "embed": embed_code,
                    "searchbox": searchbox,
                   }
@@ -265,14 +294,14 @@ def html_to_template_text(unsafe_html, context=None, render_plugins=True):
             except:
                 pass
 
-    template_bits = [etree.tostring(elem, encoding='UTF-8')
+    template_bits = [etree.tostring(elem, method='html', encoding='UTF-8')
                      for elem in container]
     container_text = escape(container.text or '').encode('UTF-8')
-    return sanitize_final(''.join(tag_imports +
-                                  [container_text] +
-                                  template_bits
-                                  )
-                         )
+    template_text = sanitize_final(''.join(
+        tag_imports + [container_text] + template_bits))
+    # Restore img src for thumbnails
+    template_text = template_text.replace('src_thumb', 'src')
+    return template_text.decode('utf-8')
 
 
 class LinkNode(Node):
@@ -358,17 +387,18 @@ class EmbedCodeNode(Node):
             for elem in top_level_elements:
                 if elem.tag == 'iframe':
                     elem = self._process_iframe(elem)
-                out.append(etree.tostring(elem, encoding='UTF-8'))
+                out.append(etree.tostring(elem, method='html',
+                                          encoding='UTF-8'))
             return ''.join(out)
 
         except IFrameSrcNotApproved:
             return (
-                '<span class="plugin embed">'
-                'The embedded URL is not on the list of approved providers.  '
-                'Contact the site administrator to add it.'
+                '<span class="plugin embed">' +
+                _('The embedded URL is not on the list of approved providers.  '
+                'Contact the site administrator to add it.') +
                 '</span>')
         except:
-            return '<span class="plugin embed">Invalid embed code</span>'
+            return '<span class="plugin embed">' + _('Invalid embed code') + '</span>'
 
 
 class SearchBoxNode(Node):
@@ -380,7 +410,7 @@ class SearchBoxNode(Node):
             # TODO: put the JS in an external file, import via Media object
             html = ('<span class="searchbox">'
                     '<input type="text" name="q" value="%s">'
-                    '<input type="submit" value="Search or create page">'
+                    '<input type="submit" value="' + _('Search or create page') + '">'
                     '<script>$(function(){'
                     '$(".searchbox input[name=\'q\']").keypress(function(evt){'
                     'if(evt.which == 13)'

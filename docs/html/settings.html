@@ -72,6 +72,11 @@ enter the domain name and display name and press &#8220;Save&#8221;.</p>
 <img alt="_images/admin_site.png" src="_images/admin_site.png" />
 </div>
 </div>
+<div class="section" id="setting-the-default-map-location">
+<h2>Setting the default map location<a class="headerlink" href="#setting-the-default-map-location" title="Permalink to this headline">¶</a></h2>
+<p>You&#8217;ll need to edit your <tt class="docutils literal"><span class="pre">localsettings.py</span></tt> file and set the default
+map location.  See the <tt class="docutils literal"><span class="pre">localsettings.py</span></tt> section below.</p>
+</div>
 <div class="section" id="localsettings-py">
 <h2><tt class="docutils literal"><span class="pre">localsettings.py</span></tt><a class="headerlink" href="#localsettings-py" title="Permalink to this headline">¶</a></h2>
 <p>Settings particular to your installation go in this file, found at
@@ -94,6 +99,12 @@ and static files.  We&#8217;ll have more detail on creating a theme soon.</dd>
 <dd>This is a list of regular expressions used to restrict what kinds of
 content users can embed.  If an embedded URL does not pass any of the
 regular expressions in this list, it will not be shown.</dd>
+<dt><tt class="docutils literal"><span class="pre">LANGUAGE_CODE</span></tt></dt>
+<dd>LocalWiki is fully localized and is currently translated into a
+number of languages.  To change your instance&#8217;s language, set this
+to one of: <tt class="docutils literal"><span class="pre">en-us</span></tt> (for English), <tt class="docutils literal"><span class="pre">ja</span></tt> (Japanese),
+<tt class="docutils literal"><span class="pre">pt_PT</span></tt> (Portuguese), <tt class="docutils literal"><span class="pre">ru_RU</span></tt> (Russian), <tt class="docutils literal"><span class="pre">de_CH</span></tt> (German, CH),
+<tt class="docutils literal"><span class="pre">es_AR</span></tt> (Spanish, Argentina), <tt class="docutils literal"><span class="pre">da_DK</span></tt> (Danish).</dd>
 </dl>
 <p>After changing settings you&#8217;ll need to restart Apache.  On most systems
 you can do this by running <tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">/etc/init.d/apache2</span> <span class="pre">restart</span></tt>.</p>
@@ -111,6 +122,7 @@ you can do this by running <tt class="docutils literal"><span class="pre">sudo</
 <li><a class="reference external" href="#">Settings</a><ul>
 <li><a class="reference external" href="#administration-interface">Administration interface</a></li>
 <li><a class="reference external" href="#domain-name-and-site-name">Domain name and site name</a></li>
+<li><a class="reference external" href="#setting-the-default-map-location">Setting the default map location</a></li>
 <li><a class="reference external" href="#localsettings-py"><tt class="docutils literal"><span class="pre">localsettings.py</span></tt></a></li>
 </ul>
 </li>

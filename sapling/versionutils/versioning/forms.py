@@ -1,5 +1,5 @@
 from django import forms
-
+from django.utils.translation import ugettext_lazy as _
 
 class CommentMixin(object):
     """
@@ -14,19 +14,23 @@ class CommentMixin(object):
                 model = Page
                 fields = ('content',)
     """
-    comment = forms.CharField(max_length=150, required=False)
+    comment = forms.CharField(max_length=150, required=False, label=_("Comment"))
 
     def __init__(self, *args, **kwargs):
         base_init = super(CommentMixin, self).__init__(*args, **kwargs)
         # Due to mixin behavior we need to set this here, too.
-        self.fields['comment'] = self.comment
+        if not 'comment' in (self._meta.exclude or []):
+            self.fields['comment'] = self.comment
         return base_init
+
+    def get_save_comment(self):
+        return self.cleaned_data.get('comment')
 
     def save(self, commit=True):
         # It would be ideal if the ModelForm save method took keyword
         # arguments and passed them along.
         save_with = getattr(self.instance, '_save_with', {})
-        comment = self.cleaned_data.get('comment')
+        comment = self.get_save_comment()
         if comment:
             save_with['comment'] = comment
         self.instance._save_with = save_with
@@ -40,7 +44,7 @@ class DeleteForm(forms.Form):
     Contains a single comment field.
     """
     comment = forms.CharField(max_length=150, required=False,
-        label="Reason for deletion")
+        label=_("Reason for deletion"))
 
 
 class RevertForm(forms.Form):
@@ -50,4 +54,4 @@ class RevertForm(forms.Form):
     Contains a single comment field.
     """
     comment = forms.CharField(max_length=150, required=False,
-        label="Reason for revert")
+        label=_("Reason for revert"))

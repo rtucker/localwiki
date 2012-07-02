@@ -115,21 +115,23 @@ def gen_data_files(*dirs):
 
 install_requires = [
     'setuptools',
-    'django>=1.3',
-    'html5lib>=0.90',
-    'Sphinx>=1.0.7',
-    'sorl-thumbnail>=11.01',
-    'python-dateutil>=1.5',
-    'pysolr',
-    'django-haystack',
-    'django-randomfilenamestorage',
-    'django-guardian',
-    'South',
-    'python-flot-utils',
-    'django-staticfiles>=1.1.2',
-    'django-registration==0.8.0-alpha-1',
+    'django==1.3',
+    'html5lib==0.95',
+    'sorl-thumbnail==11.12',
+    'python-dateutil==1.5',
+    'pysolr==2.1.0-beta',
+    'django-haystack==1.2.6',
+    'django-randomfilenamestorage==1.1',
+    'django-guardian==1.0.4',
+    'South==0.7.4',
+    'python-flot-utils==0.2.1',
+    'django-staticfiles==1.2.1',
+    'django-registration==0.8.0',
     'django-olwidget==0.46-custom1',
     'django-honeypot==0.3.0-custom',
+    'django-qsstats-magic==0.7',
+    # Actually optional:
+    'Sphinx==1.1.3',
 ]
 if int(os.getenv('DISABLE_INSTALL_REQUIRES', '0')):
     install_requires = None
@@ -138,9 +140,10 @@ setup(
     name='localwiki',
     version=get_version(),
     description="LocalWiki is a tool for collaboration in local communities",
-    long_description=open(os.path.join('deb_utils','DESCRIPTION.debian')).read(),
+    long_description=open(os.path.join('install_config','DESCRIPTION_pypi.txt')).read(),
     author='Mike Ivanov',
     author_email='mivanov@gmail.com',
+    url='http://localwiki.org',
     packages=find_packages(),
     package_dir={'sapling': 'sapling'},
     data_files=gen_data_files(
@@ -149,7 +152,6 @@ setup(
     package_data=find_package_data(exclude_directories=standard_exclude_directories + ('deb_utils',) ),
     install_requires=install_requires,
     dependency_links=[
-        'https://bitbucket.org/ubernostrum/django-registration/get/tip.tar.gz#egg=django-registration-0.8.0-alpha-1',
         'https://github.com/philipn/olwidget/tarball/custom_base_layers_fixed#egg=django-olwidget-0.46-custom1',
         'https://github.com/mivanov/django-honeypot/tarball/master#egg=django-honeypot-0.3.0-custom',
     ],
