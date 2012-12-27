@@ -297,7 +297,7 @@ textarea, input, select {
 #header .site_search {
     float: right;
     clear: right;
-    margin-top: 0.6em;
+    margin-top: -2.6em;
     margin-right: 2em;
 }
 #header .site_search input {
