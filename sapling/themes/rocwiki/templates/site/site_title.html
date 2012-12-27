@@ -1,0 +1,5 @@
+{% block site_title %}
+{% if current_site %}
+  <a href="{% url pages:frontpage %}"><img src="{{ STATIC_URL }}/theme/img/logo-fg.png" alt="{{ current_site.name }}" /></a>
+{% endif %}
+{% endblock %}
