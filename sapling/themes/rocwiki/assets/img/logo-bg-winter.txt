@@ -1,0 +1,32 @@
+Copyright 2012, Ryan S. Tucker
+
+Licensed under Creative Commons BY 3.0
+http://creativecommons.org/licenses/by/3.0/
+
+Modified with GIMP 2.6.8: white balance, color enhance, crop
+
+Original file information:
+File name       : 2012-12-27 10.20.26.jpg
+File size       : 2444317 Bytes
+MIME type       : image/jpeg
+Image size      : 3264 x 2448
+Camera make     : SAMSUNG
+Camera model    : SPH-L710
+Image timestamp : 2012:12:27 10:20:26
+Image number    : 
+Exposure time   : 1/646 s
+Aperture        : F2.6
+Exposure bias   : 0 EV
+Flash           : No flash
+Flash bias      : 
+Focal length    : 3.7 mm
+Subject distance: 
+ISO speed       : 80
+Exposure mode   : Aperture priority
+Metering mode   : Center weighted average
+Macro mode      : 
+Image quality   : 
+Exif Resolution : 3264 x 2448
+White balance   : Auto
+Thumbnail       : image/jpeg, 3839 Bytes
+Copyright       : 

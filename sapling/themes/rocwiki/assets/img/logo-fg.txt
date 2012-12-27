@@ -1,0 +1,11 @@
+Image from Rob Phillips, LCD Productions
+
+(Licensing unknown!)
+
+Modified with GIMP 2.6.8: crop, resize, add drop shadow for contrast
+
+Original file information:
+File name       : Layer02-01.png
+File size       : 27060 Bytes
+MIME type       : image/png
+Image size      : 1800 x 833
