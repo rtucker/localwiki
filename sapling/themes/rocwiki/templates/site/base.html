@@ -9,9 +9,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
   <title>{% block title %}{% if current_site %}{{ current_site.name }}{% else %}Wiki{% endif %}{% endblock %}</title>
-  <!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="{% static "theme/img/favicon-candidate-apple-touch-icon.png" %}" type="image/png" />
+  <link rel="icon" sizes="128x128" href="{% static "theme/img/favicon-candidate-chrome-128x128.png" %}" type="image/png" />
+  <link rel="icon" sizes="32x32" href="{% static "theme/img/favicon-candidate-32x32.png" %}" type="image/png" />
+  <link rel="shortcut icon" href="{% static "theme/img/favicon-candidate-16x16.ico" %}" type="image/vnd.microsoft.icon" />
   {% block search_robots %}
   <meta name="robots" content="index,follow">
   {% endblock %}
