@@ -54,7 +54,8 @@ class Comment(models.Model):
         return orig.history_date
 
     def save(self, *args, **kwargs):
-        if not self.page.commentconfiguration.enabled:
+        cfg, cre = CommentConfiguration.objects.get_or_create(page=self.page)
+        if not cfg.enabled:
             raise IntegrityError("Comments not enabled on '%s'" %
                                  self.page.name)
         super(Comment, self).save(*args, **kwargs)
