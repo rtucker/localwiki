@@ -1,0 +1,33 @@
+{% extends "pages/base.html" %}
+{% load i18n %}
+
+{% block search_robots %}
+<meta name="robots" content="noindex,nofollow">
+{% endblock %}
+
+{% block title %}{% blocktrans with name=config.page.name super=block.super%}Comment configuration for page "{{ name }}" - {{ super }}{% endblocktrans %}{% endblock %}
+
+{% block header_title %}Comment configuration for <a href="{% url pages:show slug=config.page.pretty_slug %}">{{ config.page.name }}</a>{% endblock %}
+
+{% block content %}
+  {{ form.media }}
+  <div id="comment_configuration">
+  <form method="POST">
+    {% csrf_token %}
+    <ul>
+    {{ form.as_ul }}
+    </ul>
+    <input type="hidden" name="next" value="{{ request.path }}"/>
+    <input type="submit" name="save" value="{% trans "Update" %}"/>
+  </form>
+  </div>
+{% endblock %}
+
+{% block object_actions %}
+  <ul>
+    {% if config and config.page %}
+        <li><a href="{% url pages:edit slug=config.page.pretty_slug %}" class="button">{% trans "Edit" %}</a></li>
+        <li><a href="{% url pages:history slug=config.page.pretty_slug %}" class="button active">{% trans "Info" %}</a></li>
+    {% endif %}
+  </ul>
+{% endblock %}

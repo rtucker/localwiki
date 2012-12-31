@@ -9,7 +9,7 @@ from models import Page
 from views import PageFilebrowserView
 from tags.views import PageTagSetUpdateView, suggest_tags, PageTagSetVersions,\
     PageTagSetVersionDetailView, PageTagSetCompareView, PageTagSetRevertView
-from comments.views import CommentUpdateView
+from comments.views import CommentUpdateView, CommentConfigurationUpdateView
 
 page_list_info = {
     'model': Page,
@@ -72,6 +72,9 @@ urlpatterns = patterns('',
     ##########################################################
     url(r'^(?P<slug>.+)/_comments/$', slugify(CommentUpdateView.as_view()),
         name='comments'),
+    url(r'^(?P<slug>.+)/_comments/_config/$',
+        slugify(CommentConfigurationUpdateView.as_view()),
+        name='commentconfig'),
 
     ##########################################################
     # Page tags

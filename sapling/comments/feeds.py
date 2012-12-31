@@ -1,7 +1,7 @@
 import recentchanges
 from recentchanges import RecentChanges
 
-from models import Comment
+from models import Comment, CommentConfiguration
 
 
 class CommentChanges(RecentChanges):
@@ -28,3 +28,27 @@ class CommentChanges(RecentChanges):
         return None
 
 recentchanges.register(CommentChanges)
+
+class CommentConfigurationChanges(RecentChanges):
+    classname = 'commentconfigurations'
+
+    def queryset(self, start_at=None):
+        if start_at:
+            return CommentConfiguration.versions.filter(version_info__date__gte=start_at)
+        return CommentConfiguration.versions.all()
+
+    def page(self, obj):
+        return obj.page
+
+    def title(self, obj):
+        return 'Comment Configuration for page "%s"' % self.page(obj).name
+
+    # TODO
+
+    def diff_url(self, obj):
+        return None
+
+    def as_of_url(self, obj):
+        return None
+
+recentchanges.register(CommentConfigurationChanges)

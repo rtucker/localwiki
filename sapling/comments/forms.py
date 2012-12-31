@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from utils.static import static_url
 from versionutils.versioning.forms import CommentMixin
 
-from models import Comment
+from models import Comment, CommentConfiguration
 
 
 class CommentForm(CommentMixin, forms.ModelForm):
@@ -48,3 +48,30 @@ class CommentForm(CommentMixin, forms.ModelForm):
                 teaser += '...'
                 break
         return _("Comment added: %s") % teaser
+
+
+class CommentConfigurationForm(CommentMixin, forms.ModelForm):
+
+    class Meta:
+        model = CommentConfiguration
+        exclude = ('page', 'comment',)
+
+    class Media:
+        css = {
+            'all': (static_url('css/comments/comments.css'),),
+        }
+
+    def get_save_comment(self):
+        comment = []
+        original = CommentConfiguration.objects.get(pk=self.instance.pk)
+        if self.cleaned_data['enabled'] != original.enabled:
+            comment.append("commenting %s" %
+                ('enabled' if self.cleaned_data['enabled'] else 'disabled'))
+        if self.cleaned_data['heading'] != original.heading:
+            comment.append("heading changed to '%s'" %
+                self.cleaned_data['heading'])
+
+        if len(comment) == 0:
+            return "Comment configuration: unchanged."
+        else:
+            return "Comment configuration: " + ', '.join(comment)

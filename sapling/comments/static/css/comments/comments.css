@@ -31,3 +31,18 @@
 #comments label {
     font-size: larger;
 }
+
+#comment_configuration ul {
+    list-style-type: none;
+}
+
+#comment_configuration input {
+    display: inline-block;
+    margin-left: 2.5em;
+}
+
+#comment_configuration .helptext {
+    display: block;
+    font-style: italic;
+    margin-left: 6em;
+}

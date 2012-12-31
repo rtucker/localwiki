@@ -78,5 +78,6 @@ class CommentConfiguration(models.Model):
         verbose_name = _(u'Comment Configuration')
         verbose_name_plural = _(u'Comment Configurations')
 
+versioning.register(CommentConfiguration)
 
 import feeds
