@@ -18,6 +18,9 @@ class CommentChanges(RecentChanges):
     def title(self, obj):
         return 'Comment on page "%s"' % self.page(obj).name
 
+    # There is currently no editing of existing comments, so diffs aren't
+    # necessary at this point (yet).
+
     def diff_url(self, obj):
         return None
 

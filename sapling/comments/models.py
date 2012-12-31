@@ -35,6 +35,7 @@ class Comment(models.Model):
 
     @property
     def commenter(self):
+        # Find the first version of this comment, and return its User
         qs = self.versions.order_by('history_date')
         try:
             orig = qs[0]
@@ -44,6 +45,7 @@ class Comment(models.Model):
 
     @property
     def date(self):
+        # Find the first version of this comment, and return its date
         qs = self.versions.order_by('history_date')
         try:
             orig = qs[0]
@@ -53,7 +55,8 @@ class Comment(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.page.commentconfiguration.enabled:
-            raise IntegrityError('Comments not enabled on page: %s' % self.page.name)
+            raise IntegrityError("Comments not enabled on '%s'" %
+                                 self.page.name)
         super(Comment, self).save(*args, **kwargs)
 
 versioning.register(Comment)
@@ -61,8 +64,11 @@ versioning.register(Comment)
 
 class CommentConfiguration(models.Model):
     page = models.OneToOneField('pages.Page')
-    enabled = models.BooleanField(default=True)
-    heading = models.CharField(max_length=250, default="Comments")
+    enabled = models.BooleanField(default=True,
+                                  help_text=_("Provide a Comments box on "
+                                              "this page?"))
+    heading = models.CharField(max_length=250, default="Comments",
+                               help_text=_("Label for the comments box."))
 
     def __unicode__(self):
         return _(u"Comment configuration for page %s") % self.page.name
