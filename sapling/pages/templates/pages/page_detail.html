@@ -66,9 +66,7 @@
   {% endif %}
   </div>
   <div id="comments">
-    {% if page.commentconfiguration.enabled or not page.commentconfiguration %}
-        {% comment_form page %}
-    {% endif %}
+    {% comment_form page %}
     {% comment_list page %}
   </div>
 </div>

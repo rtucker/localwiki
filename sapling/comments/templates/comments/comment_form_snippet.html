@@ -1,5 +1,6 @@
 {% load i18n %}
 {{ form.media }}
+{% if comments_enabled %}
 <form action="{% url pages:comments slug=page.pretty_slug %}" method="POST">
     <hr/>
     {% csrf_token %}
@@ -8,3 +9,4 @@
     <span class="comment-admonition">{% trans "Friendly reminder: Please be mindful of wiki etiquette when commenting." %}</span>
     <input type="submit" name="save" value="{% trans "Add comment" %}"/>
 </form>
+{% endif %}

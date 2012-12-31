@@ -21,6 +21,7 @@ def comment_list(page):
 def comment_form(context, page):
     cfg, created = CommentConfiguration.objects.get_or_create(page=page)
     context.push()
+    context['comments_enabled'] = cfg.enabled
     context['form'] = CommentForm(comment_config=cfg)
     rendered = render_to_string('comments/comment_form_snippet.html', context)
     context.pop()
