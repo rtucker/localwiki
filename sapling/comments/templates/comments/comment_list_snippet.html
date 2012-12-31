@@ -1,0 +1,14 @@
+{% load i18n %}
+{% if comment_list %}
+    <ul class="comment-list">
+    {% for comment in comment_list %}
+        <li class="comment-body">
+            <div class="comment-metadata">
+                Posted <time class="comment-date" datetime="{{ comment.date|date:"c" }}">{{ comment.date }}</time> {% trans "by" %}
+                <a href="{{ comment.commenter.get_absolute_url }}" class="comment-commenter">{{ comment.commenter.username }}</a>
+            </div>
+            <div class="comment-content">{{ comment.content|safe }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}

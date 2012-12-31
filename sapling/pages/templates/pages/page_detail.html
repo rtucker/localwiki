@@ -1,6 +1,7 @@
 {% extends "pages/base.html" %}
 {% load i18n %}
 
+{% load comments_tags %}
 {% load pages_tags %}
 {% load tags_tags %}
 
@@ -63,6 +64,12 @@
       <a class="edit_tags_cancel" href="{% url pages:show slug=page.pretty_slug %}">{% trans "Cancel" %}</a>
     </div>
   {% endif %}
+  </div>
+  <div id="comments">
+    {% if page.commentconfiguration.enabled or not page.commentconfiguration %}
+        {% comment_form page %}
+    {% endif %}
+    {% comment_list page %}
   </div>
 </div>
 {% endblock %}

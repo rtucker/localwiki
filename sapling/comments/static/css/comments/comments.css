@@ -1,0 +1,33 @@
+#comments {
+    clear: both;
+}
+
+#comments textarea.comment-box {
+    width: 100%;
+}
+
+#comments .comment-admonition {
+    float: right;
+    font-style: italic;
+}
+
+#comments ul.comment-list {
+    list-style-type: none;
+}
+
+#comments li.comment-body {
+    border-top: 1px solid;
+    margin-left: 1em;
+}
+
+#comments .comment-date {
+    font-weight: bold;
+}
+
+#comments .comment-content {
+    margin-left: 3em;
+}
+
+#comments label {
+    font-size: larger;
+}

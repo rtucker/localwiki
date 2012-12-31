@@ -1,0 +1,10 @@
+{% load i18n %}
+{{ form.media }}
+<form action="{% url pages:comments slug=page.pretty_slug %}" method="POST">
+    <hr/>
+    {% csrf_token %}
+    {{ form }}
+    <input type="hidden" name="next" value="{{ request.path }}"/>
+    <span class="comment-admonition">{% trans "Friendly reminder: Please be mindful of wiki etiquette when commenting." %}</span>
+    <input type="submit" name="save" value="{% trans "Add comment" %}"/>
+</form>

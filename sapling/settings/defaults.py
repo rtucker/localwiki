@@ -260,6 +260,7 @@ INSTALLED_APPS = (
     'pages',
     'redirects',
     'tags',
+    'comments',
     'users',
     'recentchanges',
     'search',
