@@ -904,6 +904,11 @@ div.templates li {
     padding-left: 20px;
 }
 
+#recentchanges .comments .changelabel span {
+    background: url(../img/comment-icon-small.png) -1px 1px no-repeat;
+    padding-left: 20px;
+}
+
 .see_also {
     margin-top: 2em;
     clear: both;
