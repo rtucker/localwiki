@@ -36,20 +36,18 @@ class Comment(models.Model):
     @property
     def commenter(self):
         # Find the first version of this comment, and return its User
-        qs = self.versions.order_by('history_date')
         try:
-            orig = qs[0]
-        except IndexError:
+            orig = self.versions.most_recent()
+        except self.DoesNotExist:
             return None
         return orig.history_user
 
     @property
     def date(self):
         # Find the first version of this comment, and return its date
-        qs = self.versions.order_by('history_date')
         try:
-            orig = qs[0]
-        except IndexError:
+            orig = self.versions.most_recent()
+        except self.DoesNotExist:
             return None
         return orig.history_date
 
